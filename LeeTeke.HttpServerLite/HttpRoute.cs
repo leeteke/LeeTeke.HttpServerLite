@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -54,20 +55,56 @@ namespace LeeTeke.HttpServerLite
             if (_parametersNum == 0)
             {
                 context.Close(HttpStatusCode.OK);
-                Method.Invoke(Parent, null);
+                MethodDo(context, null);
             }
             else if (_parametersNum == @params.Length)
             {
-                Method.Invoke(Parent, @params);
+                MethodDo(context, @params);
             }
             else if (_parametersNum < @params.Length)
             {
-                Method.Invoke(Parent, @params.Take(_parametersNum).ToArray());
+                MethodDo(context, @params.Take(_parametersNum).ToArray());
             }
             else
             {
-                context.Close(HttpStatusCode.NotImplemented);
+                if (Parent is HttpControllerBase hb)
+                {
+                    hb.RaiseException(context, new NotImplementedException());
+                }
+                else
+                {
+                    context.Close(HttpStatusCode.NotImplemented);
+                }
             }
+
+        }
+
+        private void MethodDo(HttpListenerContext context, object?[]? @params)
+        {
+
+            if (Method.ReturnType.Name == nameof(Task))
+            {
+                ((Task)Method.Invoke(Parent, @params)!).ContinueWith(t =>
+                  {
+                      if (t.IsFaulted)
+                      {
+                          if (Parent is HttpControllerBase hb)
+                          {
+                              hb.RaiseException(context, t.Exception);
+                          }
+                          else
+                          {
+                              context.Abort();
+                          }
+                      }
+                  }, TaskContinuationOptions.OnlyOnFaulted).ConfigureAwait(false);
+            }
+            else
+            {
+               
+                    Method.Invoke(Parent, @params);
+            }
+
 
         }
     }

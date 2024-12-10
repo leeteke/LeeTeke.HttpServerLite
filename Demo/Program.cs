@@ -12,7 +12,7 @@ namespace Demo
             //创建http服务
             var httpBuilder = HttpServerLite.CreateBuilder(new HttpApplicationOptions()
             {
-                // Port = 80,默认80端口
+                 Port = 1443,//默认80端口
                 // Prefixes = ["https://127.0.0.1:443/"],与Port属性冲突，如果此选项有数值则port选项不生效,单独使用port只会监听http协议
                 // RootPath = "./wwwroot/"
                 //,ArgStr="" 自定义文本参数
@@ -49,11 +49,11 @@ namespace Demo
 
 
                 //使用HSTS
-                if (!context.HSTS())
-                    return;
+                //if (!context.HSTS())
+                //    return;
 
-                //解决跨域问题
-                context.CorsAllowHeaders().CorsAllowMethods().CorsAllowOrigin();
+                ////解决跨域问题
+                //context.CorsAllowHeaders().CorsAllowMethods().CorsAllowOrigin();
 
                 //继续下一步
                 next();
@@ -68,7 +68,7 @@ namespace Demo
                 context.SendString($"不存在当前的地址:{url}");
             });
 
-            //路由时发生异常捕获(log也会捕获异常)
+            //路由时发生异常捕获(log会捕捉非Task任务，如果是Task任务则只能在这里捕获。注意 async void 无法捕获。)
             httpBuilder.RouteExceptionFactory((context, ex) =>
             {
                 var url = context.Request.Url!.LocalPath;
@@ -90,12 +90,17 @@ namespace Demo
             //访问 www.xxx.com/vue/ 会直接运行 单页面模式 vue。
             httpBuilder.ControllerAdd(new VueHistoryModeRouter("/vue/") { UseCache_Lastmodified = true, UseGZip = true });
 
+
+
+
             //开始服务
             httpBuilder.Run();
+
+
 
             Console.ReadLine();
         }
 
-
+     
     }
 }

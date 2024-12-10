@@ -23,8 +23,9 @@ namespace Demo
                
         //www.xxx.com与www.xxx.com/ 将路由到这里
         [Route("/")]
-        public void Root(HttpListenerContext listenerContext)
+        public  void Root(HttpListenerContext listenerContext)
         {
+
             listenerContext.SendString("这里是首页");
         }
 
@@ -34,6 +35,9 @@ namespace Demo
         {
             httpListenerContext.SendString("这里跟 TestController 不是一个路径");
         }
+
+     
+
 
         //这里列举了关于HttpListenerContext 的响应扩展方法
         [Route("/test")]

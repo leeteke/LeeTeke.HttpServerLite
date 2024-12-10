@@ -20,7 +20,7 @@ namespace LeeTeke.HttpServerLite
         internal readonly HttpListener _listener;//http服务
         private Action<HttpListenerContext, Action> _brforeRoute = (l, next) => next();//route前的操作
         private Action<HttpListenerContext> _routeFailure = l => l.Abort();//导航失败
-        private Action<HttpListenerContext, Exception> _routeExceptionFactory = (l, ex) => l.Close(HttpStatusCode.InternalServerError);
+        internal Action<HttpListenerContext, Exception> _routeExceptionFactory = (l, ex) => l.Close(HttpStatusCode.InternalServerError);
         private readonly HttpRouter _httpRouter;//路由
         internal HttpApplicationOptions _opt = null!;//参数
 

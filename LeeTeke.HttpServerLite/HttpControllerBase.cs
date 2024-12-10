@@ -42,5 +42,15 @@ namespace LeeTeke.HttpServerLite
             next(null);
         }
 
+        /// <summary>
+        /// 异常上升至RouteExceptionFactory处理
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="ex"></param>
+        public void RaiseException(HttpListenerContext context ,Exception ex)
+        {
+            _builder._routeExceptionFactory(context, ex);
+        }
+
     }
 }

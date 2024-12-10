@@ -115,7 +115,7 @@ httpBuilder.Run();
           base.RoutePrefix = "/testcontroll/";
       }
 
-
+      //请注意 此方法 谨慎使用 async void 形式 ，若必须使用，则请注意在内部使用try catch;
       public override void BeforeRoute(HttpListenerContext listenerContext, Action<object[]?> next)
       {
           //这里是控制器内部的先行判断
@@ -186,6 +186,42 @@ httpBuilder.Run();
       {
           context.SendString(context.Request.Url!.LocalPath+"_"+obj);
       }
+
+
+      //关于方法体里的异常说明
+        //关于方法的异常捕获，此写法可触发RouteExceptionFactory，同时会触发Log里的Exception;
+        [Route("/taskvoid")]
+        public void TaskVoid(HttpListenerContext listenerContext)
+        {
+            throw new Exception("这是个常规任务测试异常");
+        }
+
+
+        //关于方法的异常捕获，此写法可触发RouteExceptionFactory，但不会触发Log里的Exception;
+        [Route("/task")]
+        public async Task TaskA(HttpListenerContext listenerContext)
+        {
+            await Task.CompletedTask;
+            throw new Exception("这是个Task任务测试异常");
+        }
+        //这种异常不会捕获，请谨慎使用！请谨慎使用！请谨慎使用！
+        //若必须使用，则请注意在内部使用try catch;
+        [Route("/taskasync")]
+        public async void TaskB(HttpListenerContext listenerContext)
+        {
+            try
+            {
+
+                await Task.CompletedTask;
+                throw new Exception("这种异常不会捕获，请请注意使用！");
+            }
+            catch (Exception ex)
+            {
+
+                //自己处理异常或者将异常传递给路由异常工厂处理。不会触发Log里的Exception;
+                this.RaiseException(listenerContext, ex);
+            }
+        }
   }
 ```
 
