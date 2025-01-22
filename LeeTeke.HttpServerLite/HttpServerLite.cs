@@ -1099,7 +1099,7 @@ namespace LeeTeke.HttpServerLite
                 return JsonSerializer.Deserialize<T>(ReadString(request, encoding), options);
 
             }
-            catch (Exception)
+            catch 
             {
 
                 return default;

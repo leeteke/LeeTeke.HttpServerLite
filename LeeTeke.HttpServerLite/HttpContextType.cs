@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace LeeTeke.HttpServerLite
 {
@@ -31,10 +32,10 @@ namespace LeeTeke.HttpServerLite
         /// <param name="url"></param>
         /// <param name="txtCharset"></param>
         /// <returns></returns>
-        public static string? AnalysisUri(this Uri? url, string? txtCharset = "utf-8")
+        public static string AnalysisUri(this Uri? url, string? txtCharset = "utf-8")
         {
             if (url == null)
-                return null;
+                return "application/octet-stream";
             return AnalysisSuffix(url.Segments.Last(), txtCharset);
         }
 
@@ -44,7 +45,7 @@ namespace LeeTeke.HttpServerLite
         /// <param name="suffix"></param>
         /// <param name="txtCharset"></param>
         /// <returns></returns>
-        public static string? AnalysisSuffix(string? suffix, string? txtCharset = "utf-8")
+        public static string AnalysisSuffix(string? suffix, string? txtCharset = "utf-8")
         {
             var result = Path.GetExtension(suffix) switch
             {
@@ -295,7 +296,6 @@ namespace LeeTeke.HttpServerLite
                 ".stl" => "application/vnd.ms-pki.stl",
                 ".stm" => "text/html",
                 ".sty" => "application/x-sty",
-
                 ".swf" => "application/x-shockwave-flash",
                 ".tdf" => "application/x-tdf",
                 ".tg4" => "application/x-tg4",
@@ -357,7 +357,6 @@ namespace LeeTeke.HttpServerLite
                 ".xfd" => "application/vnd.adobe.xfd",
                 ".xfdf" => "application/vnd.adobe.xfdf",
                 ".xhtml" => "text/html",
-                ".xls" => "application/x-xls",
                 ".xlw" => "application/x-xlw",
                 ".xml" => "text/xml",
                 ".xpl" => "audio/scpls",
@@ -375,23 +374,36 @@ namespace LeeTeke.HttpServerLite
                 ".ipa" => "application/vnd.iphone",
                 ".apk" => "application/vnd.android.package-archive",
                 ".xap" => "application/x-silverlight-app",
-                "" => null,
-                "." => null,
-                null => null,
-
                 ".svg" => "image/svg+xml",
                 ".webp" => "image/webp",
                 ".ice" => "x-conference/x-cooltalk",
                 ".qt" => "video/quicktime",
                 ".mov" => "video/quicktime",
                 ".mxu" => "video/vnd.mpegurl",
+                ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                ".dotx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
+                ".docm" => "application/vnd.ms-word.document.macroEnabled.12",
+                ".dotm" => "application/vnd.ms-word.template.macroEnabled.12",
+                ".xls" => "application/vnd.ms-excel",
+                ".xlt" => "application/vnd.ms-excel",
+                ".xla" => "application/vnd.ms-excel",
+                ".xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                ".xltx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.template",
+                ".xlsm" => "application/vnd.ms-excel.sheet.macroEnabled.12",
+                ".xltm" => "application/vnd.ms-excel.template.macroEnabled.12",
+                ".xlam" => "application/vnd.ms-excel.addin.macroEnabled.12",
+                ".xlsb" => "application/vnd.ms-excel.sheet.binary.macroEnabled.12",
+                ".pptx" => "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                ".potx" => "application/vnd.openxmlformats-officedocument.presentationml.template",
+                ".ppsx" => "application/vnd.openxmlformats-officedocument.presentationml.slideshow",
+                ".ppam" => "application/vnd.ms-powerpoint.addin.macroEnabled.12",
+                ".pptm" => "application/vnd.ms-powerpoint.presentation.macroEnabled.12",
+                ".potm" => "application/vnd.ms-powerpoint.presentation.macroEnabled.12",
+                ".ppsm" => "application/vnd.ms-powerpoint.slideshow.macroEnabled.12",
 
-                _ => "application/" + suffix?.Split("/").Last().TrimStart('.'),
+                _ => "application/octet-stream",
             };
 
-
-            if (result == null)
-                return null;
 
             if (result.StartsWith("text") && txtCharset != null)
                 return Encoder(result, txtCharset);
