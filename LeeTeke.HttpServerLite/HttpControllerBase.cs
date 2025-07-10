@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace LeeTeke.HttpServerLite
 {
+    /// <summary>
+    /// 控制器基本类
+    /// </summary>
     public abstract class HttpControllerBase
     {
 

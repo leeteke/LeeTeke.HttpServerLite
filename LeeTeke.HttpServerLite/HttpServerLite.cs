@@ -14,6 +14,9 @@ using System.Runtime.InteropServices;
 
 namespace LeeTeke.HttpServerLite
 {
+    /// <summary>
+    /// HttpServerLite
+    /// </summary>
     public static class HttpServerLite
     {
 

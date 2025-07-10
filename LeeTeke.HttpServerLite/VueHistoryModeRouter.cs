@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace LeeTeke.HttpServerLite
 {
+    /// <summary>
+    /// 适用于Vue History导航的html文件路由
+    /// </summary>
     public class VueHistoryModeRouter : HttpControllerBase
     {
 
@@ -33,13 +36,19 @@ namespace LeeTeke.HttpServerLite
         /// </summary>
         public bool UseCache_Lastmodified { get; set; } = true;
 
+        /// <summary>
+        /// 适用于Vue History导航的html文件路由
+        /// </summary>
         public VueHistoryModeRouter(string prefix = "/")
         {
             RoutePrefix = prefix;
         }
 
 
-
+        /// <summary>
+        /// 首页
+        /// </summary>
+        /// <param name="listenerContext"></param>
         [Route("/", TakeOver = true)]
         public void Index(HttpListenerContext listenerContext)
         {

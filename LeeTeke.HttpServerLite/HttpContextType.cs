@@ -10,6 +10,9 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace LeeTeke.HttpServerLite
 {
+    /// <summary>
+    /// HttpContextType
+    /// </summary>
     public static class HttpContextType
     {
         /// <summary>

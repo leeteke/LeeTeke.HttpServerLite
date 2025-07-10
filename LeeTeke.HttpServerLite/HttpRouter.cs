@@ -11,7 +11,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace LeeTeke.HttpServerLite
-{
+{ /// <summary>
+  /// http路由器
+  /// </summary>
     public class HttpRouter
     {
         private ConcurrentDictionary<string, HttpRoute> _mainDic;//主路由dir

@@ -28,8 +28,8 @@ namespace LeeTeke.HttpServerLite
 
         /// <summary>
         /// 规则：
-        /// 会自动去除去后尾的 '/' ；
-        /// 当TookOver为True时自动后置追加'/'；
+        /// <para>会自动去除去后尾的 '/' ；</para>
+        /// <para>当TookOver为True时自动后置追加'/'；</para> 
         /// </summary>
         /// <param name="routePath"></param>
         public RouteAttribute(string routePath="")
@@ -39,6 +39,10 @@ namespace LeeTeke.HttpServerLite
                 RoutePath += "/";
         }
 
+        /// <summary>
+        /// 多个地址
+        /// </summary>
+        /// <param name="routePaths"></param>
         public RouteAttribute(params string[] routePaths)
         {
 

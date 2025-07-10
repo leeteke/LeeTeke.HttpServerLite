@@ -13,7 +13,9 @@ using System.Threading.Tasks;
 namespace LeeTeke.HttpServerLite
 {
 
-
+    /// <summary>
+    /// HttpListener构建器
+    /// </summary>
     public sealed class HttpListenerBuilder
     {
 
@@ -30,7 +32,9 @@ namespace LeeTeke.HttpServerLite
         /// </summary>
         public string ServerName { get; set; } = string.Empty;
 
-
+        /// <summary>
+        /// HttpListener构建器
+        /// </summary>
         public HttpListenerBuilder()
         {
             _listener = new HttpListener();
@@ -47,7 +51,7 @@ namespace LeeTeke.HttpServerLite
         {
             if (!HttpListener.IsSupported)
             {
-                Logger("当前平台不支持！");
+                Logger("PlatformNotSupportedException！");
                 throw new PlatformNotSupportedException();
             }
 
@@ -56,7 +60,17 @@ namespace LeeTeke.HttpServerLite
                 _listener.Start();
                 _listener.BeginGetContext(new AsyncCallback(GetContextCallCack), _listener);
                 //启动成功
-                Logger($"http服务器启动成功!监听地址为：{string.Join("\t", _opt.Prefixes!)}\t监听端口为：{_opt.Port}\tHtml文件更目录为:{_opt.RootPath}");
+
+                if (_opt.Prefixes != null) {
+                    Logger($"http服务器启动成功!监听地址为：{string.Join("\t", _opt.Prefixes)}\tHtml文件根目录为:{_opt?.RootPath}");
+
+                }
+                else
+                {
+                    Logger($"http服务器启动成功!监听端口为：{_opt?.Port}\tHtml文件根目录为:{_opt?.RootPath}");
+
+                }
+
             }
             catch (Exception ex)
             {
@@ -208,7 +222,7 @@ namespace LeeTeke.HttpServerLite
 
         private void HttpWork(HttpListenerContext listenerContext)
         {
-            ///服务头
+            //服务头
             listenerContext.Response.Headers.Add("Server", ServerName);
             _brforeRoute(listenerContext, () =>
             {

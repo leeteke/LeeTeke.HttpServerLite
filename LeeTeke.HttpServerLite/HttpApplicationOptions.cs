@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace LeeTeke.HttpServerLite
 {
+    /// <summary>
+    /// Http启动参数
+    /// </summary>
     public class HttpApplicationOptions
     {
         /// <summary>

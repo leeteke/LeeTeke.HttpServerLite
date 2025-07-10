@@ -3,6 +3,13 @@
 · 内置路由方法，可通过映射或者创建控制器来进行路由操作；
 · 内置多个HttpListenerContext扩展方法，方便进行http请求或响应操作；
 
+## Nuget
+[![NUGET](https://img.shields.io/badge/nuget-1.1.2-blue.svg)](https://www.nuget.org/packages/LeeTeke.HttpServerLite)
+
+    dotnet add package LeeTeke.HttpServerLite --version 1.1.2
+
+## 基本使用方法
+
 ## 基本使用方法
 
 ### 初始化

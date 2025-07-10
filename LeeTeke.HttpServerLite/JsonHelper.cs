@@ -8,6 +8,9 @@ using System.Text.Unicode;
 
 namespace LeeTeke.HttpServerLite
 {
+    /// <summary>
+    /// 小小的json帮助方法
+    /// </summary>
     public static class JsonHelper
     {
         /// <summary>
@@ -78,6 +81,7 @@ namespace LeeTeke.HttpServerLite
         /// tojson
         /// </summary>
         /// <param name="data"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
         public static string SerializeToStr(object data, JsonSerializerOptions? options = null)
         {
