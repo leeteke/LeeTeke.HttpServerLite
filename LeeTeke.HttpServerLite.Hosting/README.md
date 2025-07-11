@@ -2,9 +2,9 @@
 # LeeTeke.HttpServerLite.Hosting
 · LeeTeke.HttpServerLite for Microsoft.Extensions.Hosting
 ## Nuget
-[![NUGET](https://img.shields.io/badge/nuget-1.1.2-blue.svg)](https://www.nuget.org/packages/LeeTeke.HttpServerLite.Hosting)
+[![NUGET](https://img.shields.io/badge/nuget-1.1.3-blue.svg)](https://www.nuget.org/packages/LeeTeke.HttpServerLite.Hosting)
 
-    dotnet add package LeeTeke.HttpServerLite.Hosting --version 1.1.2
+    dotnet add package LeeTeke.HttpServerLite.Hosting --version 1.1.3
 
 
 ## 基本使用方法
@@ -30,6 +30,19 @@ using LeeTeke.HttpServerLite.Hosting
                 //手动配置
                 //.UseHttpServerLite(new HttpApplicationOptions() { Port=81},HttpServerLiteConfigure)
                 //使用配置文件配置版本
+                //会自动读取 配置文件下的 HttServerLite 配置项，该配置项为 HttpApplicationOptions的序列化，如下所示
+                /*
+                     "HttpServerLite": {
+                        //监听地址，值类型string[]
+                        "Prefixes": null,
+                        //监听端口，当Prefixes存在值时，此配置项不生效
+                        "Port": 80,
+                        //网页根目录
+                        "RootPath": "./wwwroot/",
+                        //其他自定义参数，值类型string
+                        "ArgStr": null
+                      }
+                */
                 .UseHttpServerLite(HttpServerLiteConfigure)
                 .Build();
 

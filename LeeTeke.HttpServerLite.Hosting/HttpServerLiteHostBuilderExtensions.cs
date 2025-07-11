@@ -82,10 +82,8 @@ namespace LeeTeke.HttpServerLite
         {
             try
             {
-                var json = configuration["HttpServerLite"];
-                if (string.IsNullOrEmpty(json))
-                    return null;
-                return JsonSerializer.Deserialize<HttpApplicationOptions>(json);
+               var options= configuration.GetSection("HttpServerLite").Get<HttpApplicationOptions>();
+                return options;
             }
             catch
             {
