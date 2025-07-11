@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>Leeteke</Authors>
+    <Version>1.1.2</Version>
+    <PackageProjectUrl>https://github.com/leeteke/LeeTeke.HttpServerLite</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/leeteke/LeeTeke.HttpServerLite</RepositoryUrl>
+    <PackageTags>httpserverlite,http;http server; http router; vue;hosting;</PackageTags>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Description>LeeTeke.HttpServerLite for Microsoft.Extensions.Hosting</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LeeTeke.HttpServerLite" Version="1.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

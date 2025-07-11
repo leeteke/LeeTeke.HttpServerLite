@@ -1,6 +1,8 @@
 # LeeTeke.HttpServerLite
-· 基于http.sys的HttpListener制作的轻量http代理服务器；
-· 内置路由方法，可通过映射或者创建控制器来进行路由操作；
+· 基于http.sys的HttpListener制作的轻量http代理服务器； 
+
+· 内置路由方法，可通过映射或者创建控制器来进行路由操作； 
+
 · 内置多个HttpListenerContext扩展方法，方便进行http请求或响应操作；
 
 ## Nuget
@@ -10,12 +12,8 @@
 
 ## 基本使用方法
 
-## 基本使用方法
-
-### 初始化
+### 构建 
 ```csharp
-using LeeTeke.HttpServerLite;
-
 //创建http服务
 var httpBuilder = HttpServerLite.CreateBuilder(new HttpApplicationOptions()
 {
@@ -316,3 +314,4 @@ httpBuilder.Run();
      }
  }
 ```
+

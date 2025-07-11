@@ -1,28 +1,54 @@
 ﻿using LeeTeke.HttpServerLite;
-using System.Runtime.CompilerServices;
-using System.Timers;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Demo
 {
-    internal class Program
+    internal class HostingProgram
     {
+
         static void Main(string[] args)
         {
 
-           
+            var _hosting = Host.CreateDefaultBuilder(args)
+                .ConfigureHostConfiguration(configuration =>
+                {
+                    configuration.AddJsonFile("appsettings.json", false, true);
+                    configuration.AddCommandLine(args);
+
+                })
+                .ConfigureServices((hosting, service) =>
+                {
+                    service.AddSingleton<TestRootController>();
+                    service.AddSingleton<TestController>();
+
+                })
+                //使用 UseHttpServerLite 后会自动 将 HttpListenerBuilder 注册为 Singleton。 
+                //手动配置
+                //.UseHttpServerLite(new HttpApplicationOptions() { Port=81},HttpServerLiteConfigure)
+                //使用配置文件配置版本
+                .UseHttpServerLite(HttpServerLiteConfigure)
+                .Build();
+
+            _hosting.Start();
+
+            _hosting.WaitForShutdown();
 
 
-            //创建http服务
-            var httpBuilder = HttpServerLite.CreateBuilder(new HttpApplicationOptions()
-            {
-                 Port = 1443,//默认80端口
-                // Prefixes = ["https://127.0.0.1:443/"],与Port属性冲突，如果此选项有数值则port选项不生效,单独使用port只会监听http协议
-                // RootPath = "./wwwroot/"
-                //,ArgStr="" 自定义文本参数
-            });
 
+        }
+
+
+        static void HttpServerLiteConfigure(HostBuilderContext hosting, IServiceProvider services, HttpListenerBuilder httpBuilder)
+        {
             //日志输出
-            httpBuilder.HttpServerLiteLogTrigger += (sender,  args)=>
+            httpBuilder.HttpServerLiteLogTrigger += (sender, args) =>
             {
                 if (args.Exception == null)
                 {
@@ -85,20 +111,17 @@ namespace Demo
             });
 
             //使用Controller
-            httpBuilder.ControllerAdd(new TestRootController());
-            httpBuilder.ControllerAdd(new TestController());
+            httpBuilder.ControllerAdd(services.GetRequiredService<TestRootController>());
+            httpBuilder.ControllerAdd(services.GetRequiredService<TestController>());
 
             //提供了Vue文件的快速构建路由
             //参数输入基于RootPath位置
             //访问 www.xxx.com/vue/ 会直接运行 单页面模式 vue。
             httpBuilder.ControllerAdd(new VueHistoryModeRouter("/vue/") { UseCache_Lastmodified = true, UseGZip = true });
 
-            //开始服务
-            httpBuilder.Run();
 
-            Console.ReadLine();
+            //这里不用写Run了，服务会自动启动
+            //httpBuilder.Run();
         }
-
-     
     }
 }

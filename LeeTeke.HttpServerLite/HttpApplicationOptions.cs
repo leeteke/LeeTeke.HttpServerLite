@@ -17,7 +17,7 @@ namespace LeeTeke.HttpServerLite
         public string[]? Prefixes { get; set; }
         /// <summary>
         /// 监听端口
-        /// 当Prefixs存在时次参数无效
+        /// 当Prefixs存在时，此参数无效
         /// </summary>
         public int Port { get; set; } = 80;
 
