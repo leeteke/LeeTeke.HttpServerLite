@@ -6,9 +6,9 @@
 · 内置多个HttpListenerContext扩展方法，方便进行http请求或响应操作；
 
 ## Nuget
-[![NUGET](https://img.shields.io/badge/nuget-1.1.2-blue.svg)](https://www.nuget.org/packages/LeeTeke.HttpServerLite)
+[![NUGET](https://img.shields.io/badge/nuget-1.1.3-blue.svg)](https://www.nuget.org/packages/LeeTeke.HttpServerLite)
 
-    dotnet add package LeeTeke.HttpServerLite --version 1.1.2
+    dotnet add package LeeTeke.HttpServerLite --version 1.1.3
 
 ## 基本使用方法
 
@@ -120,7 +120,7 @@ httpBuilder.Run();
           base.RoutePrefix = "/testcontroll/";
       }
 
-      //请注意 此方法 谨慎使用 async void 形式 ，若必须使用，则请注意在内部使用try catch;
+      //请注意 此方法 谨慎使用 async void 形式 ，若必须使用，则请注意在内部使用try catch;或者使用 override async Task BeforeRouteAsync;
       public override void BeforeRoute(HttpListenerContext listenerContext, Action<object[]?> next)
       {
           //这里是控制器内部的先行判断
@@ -143,6 +143,11 @@ httpBuilder.Run();
 
       }
 
+      //与BeforeRoute仅可使用一种。两者存在，则此异步方法不生效。
+      public override Task BeforeRouteAsync(HttpListenerContext listenerContext, Action<object[]?> next)
+      {
+          return base.BeforeRouteAsync(listenerContext, next);
+      }
 
       //1、方法必须是Public；
       //2、必须有 RouteAttribute，可以多个;

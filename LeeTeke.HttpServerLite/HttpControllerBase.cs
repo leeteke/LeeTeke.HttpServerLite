@@ -35,13 +35,36 @@ namespace LeeTeke.HttpServerLite
 
         protected HttpListenerBuilder Builder => _builder;
 
+              
+
+
         /// <summary>
         /// 路由之前的调用
         /// </summary>
         /// <param name="listenerContext"></param>
         /// <param name="next"></param>
-        public virtual void BeforeRoute(HttpListenerContext listenerContext, Action<object[]?> next)
+        public virtual async void BeforeRoute(HttpListenerContext listenerContext, Action<object[]?> next)
         {
+            try
+            {
+                await BeforeRouteAsync(listenerContext, next);
+
+            }
+            catch (Exception ex)
+            {
+                RaiseException(listenerContext, ex);
+            }
+        }
+
+        /// <summary>
+        /// 路由之前的调用【异步】
+        /// <para>与同步方法排斥，二者存在，则本方法不生效</para>
+        /// </summary>
+        /// <param name="listenerContext"></param>
+        /// <param name="next"></param>
+        public virtual async Task BeforeRouteAsync(HttpListenerContext listenerContext, Action<object[]?> next)
+        {
+            await Task.CompletedTask;
             next(null);
         }
 
@@ -50,7 +73,7 @@ namespace LeeTeke.HttpServerLite
         /// </summary>
         /// <param name="context"></param>
         /// <param name="ex"></param>
-        public void RaiseException(HttpListenerContext context ,Exception ex)
+        public void RaiseException(HttpListenerContext context, Exception ex)
         {
             _builder._routeExceptionFactory(context, ex);
         }

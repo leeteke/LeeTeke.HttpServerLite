@@ -24,7 +24,7 @@ namespace Demo
         }
 
 
-        //请注意 此方法 谨慎使用 async void 形式 ，若必须使用，则请注意在内部使用try catch;
+        //请注意 此方法 谨慎使用 async void 形式 ，若必须使用，则请注意在内部使用try catch。或者使用 override async Task BeforeRouteAsync;
         public override void BeforeRoute(HttpListenerContext listenerContext, Action<object[]?> next)
         {
             //这里是控制器内部的先行判断
@@ -43,8 +43,11 @@ namespace Demo
                     next([]);
                     break;
             }
-
-
+        }
+        //与BeforeRoute仅可使用一种。两者存在，则此异步方法不生效。
+        public override Task BeforeRouteAsync(HttpListenerContext listenerContext, Action<object[]?> next)
+        {
+            return base.BeforeRouteAsync(listenerContext, next);
         }
 
 
