@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Collections;
+using System.Reflection;
 using System.Text.Json;
 
 namespace LeeTeke.HttpServerLite
@@ -77,12 +78,37 @@ namespace LeeTeke.HttpServerLite
 
         }
 
+        /// <summary>
+        /// 从IoC容器里面找
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static HttpListenerBuilder ControllerAddFromIoc(this HttpListenerBuilder builder, IServiceProvider service)
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var assembly in assemblies)
+            {
+                var types = assembly.GetTypes().Where(p => p.BaseType == typeof(HttpControllerBase));
+                if (types.Any())
+                {
+                    foreach (var @type in types)
+                    {
+                        var controller = service.GetService(@type);
+                        if (controller != null)
+                            builder.ControllerAdd(controller);
+                    }
+                }
+            }
+            return builder;
+        }
+
+
 
         private static HttpApplicationOptions? GetOptionsAppSettinJson(IConfiguration configuration)
         {
             try
             {
-               var options= configuration.GetSection("HttpServerLite").Get<HttpApplicationOptions>();
+                var options = configuration.GetSection("HttpServerLite").Get<HttpApplicationOptions>();
                 return options;
             }
             catch

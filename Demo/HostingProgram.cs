@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -110,9 +111,14 @@ namespace Demo
                 throw new Exception("thrwo exception !");
             });
 
-            //使用Controller
+
+
+            //手动使用ControllerAdd
             httpBuilder.ControllerAdd(services.GetRequiredService<TestRootController>());
             httpBuilder.ControllerAdd(services.GetRequiredService<TestController>());
+
+            //或者直接从IOC里面找
+            //httpBuilder.ControllerAddFromIoc(services);
 
             //提供了Vue文件的快速构建路由
             //参数输入基于RootPath位置

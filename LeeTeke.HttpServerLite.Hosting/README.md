@@ -2,9 +2,9 @@
 # LeeTeke.HttpServerLite.Hosting
 · LeeTeke.HttpServerLite for Microsoft.Extensions.Hosting
 ## Nuget
-[![NUGET](https://img.shields.io/badge/nuget-1.1.3-blue.svg)](https://www.nuget.org/packages/LeeTeke.HttpServerLite.Hosting)
+[![NUGET](https://img.shields.io/badge/nuget-1.1.4-blue.svg)](https://www.nuget.org/packages/LeeTeke.HttpServerLite.Hosting)
 
-    dotnet add package LeeTeke.HttpServerLite.Hosting --version 1.1.3
+    dotnet add package LeeTeke.HttpServerLite.Hosting --version 1.1.4
 
 
 ## 基本使用方法
@@ -119,6 +119,9 @@ using LeeTeke.HttpServerLite.Hosting
             //使用Controller
             httpBuilder.ControllerAdd(services.GetRequiredService<TestRootController>());
             httpBuilder.ControllerAdd(services.GetRequiredService<TestController>());
+
+            //或者直接从IOC里面找
+            //httpBuilder.ControllerAddFromIoc(services)
 
             //提供了Vue文件的快速构建路由
             //参数输入基于RootPath位置
