@@ -1,14 +1,15 @@
 # LeeTeke.HttpServerLite
+【现已支持Native AOT！！！】
 · 基于http.sys的HttpListener制作的轻量http代理服务器； 
 
-· 内置路由方法，可通过映射或者创建控制器来进行路由操作； 
+· 内置路由方法，可通过映射或者创建控制器来进行路由操作；[1.2.0以后的版本支持将路由方法接口化，以支持AOT，详情请见LeeTeke.HttpServerLite.AOT]
 
 · 内置多个HttpListenerContext扩展方法，方便进行http请求或响应操作；
 
 ## Nuget
-[![NUGET](https://img.shields.io/badge/nuget-1.1.3-blue.svg)](https://www.nuget.org/packages/LeeTeke.HttpServerLite)
+[![NUGET](https://img.shields.io/badge/nuget-1.2.0-blue.svg)](https://www.nuget.org/packages/LeeTeke.HttpServerLite)
 
-    dotnet add package LeeTeke.HttpServerLite --version 1.1.3
+    dotnet add package LeeTeke.HttpServerLite --version 1.2.0
 
 ## 基本使用方法
 

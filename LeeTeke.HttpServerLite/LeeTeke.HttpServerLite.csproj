@@ -1,18 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFramework>net8.0</TargetFramework>
+	<TargetFramework>netstandard2.0</TargetFramework>
+	<LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Description>本项目 基于 http.sys的 HttpListener 类制作的 http简易服务器。</Description>
+    <Description>本项目 基于 http.sys的 HttpListener 类制作的 http简易服务器。现已支持Native AOT!!!</Description>
     <PackageProjectUrl>https://github.com/leeteke/LeeTeke.HttpServerLite</PackageProjectUrl>
     <RepositoryUrl>https://github.com/leeteke/LeeTeke.HttpServerLite</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageTags>http;http server; http router; vue;</PackageTags>
+    <PackageTags>http;http server; http router; vue; http aot;aot; native aot;</PackageTags>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.1.3</Version>
+    <Version>1.2.0</Version>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <Authors>Leeteke</Authors>
     <Company />
@@ -27,6 +28,11 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+    <PackageReference Include="System.Text.Json" Version="10.0.0" />
   </ItemGroup>
 
 </Project>

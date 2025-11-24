@@ -19,12 +19,17 @@ namespace LeeTeke.HttpServerLite
     public sealed class HttpListenerBuilder
     {
 
-        internal readonly HttpListener _listener;//http服务
+        internal HttpListener Listener => _listener;
+        internal HttpApplicationOptions Options => _opt;
+
+        internal Action<HttpListenerContext, Exception> RaiseRouteException { get; set; } = (l, ex) => l.Close(HttpStatusCode.InternalServerError);
+
+        private readonly HttpListener _listener;//http服务
         private Action<HttpListenerContext, Action> _brforeRoute = (l, next) => next();//route前的操作
         private Action<HttpListenerContext> _routeFailure = l => l.Abort();//导航失败
-        internal Action<HttpListenerContext, Exception> _routeExceptionFactory = (l, ex) => l.Close(HttpStatusCode.InternalServerError);
-        private readonly HttpRouter _httpRouter;//路由
-        internal HttpApplicationOptions _opt = null!;//参数
+   
+        private readonly IHttpServierLiteRouter _httpRouter;//路由
+        private HttpApplicationOptions _opt = null!;//参数
 
 
         /// <summary>
@@ -35,10 +40,10 @@ namespace LeeTeke.HttpServerLite
         /// <summary>
         /// HttpListener构建器
         /// </summary>
-        public HttpListenerBuilder()
+        public HttpListenerBuilder(IHttpServierLiteRouter router)
         {
             _listener = new HttpListener();
-            _httpRouter = new HttpRouter();
+            _httpRouter = router;
         }
 
         #region PublicMethods
@@ -61,7 +66,8 @@ namespace LeeTeke.HttpServerLite
                 _listener.BeginGetContext(new AsyncCallback(GetContextCallCack), _listener);
                 //启动成功
 
-                if (_opt.Prefixes != null) {
+                if (_opt.Prefixes != null)
+                {
                     Logger($"http服务器启动成功!监听地址为：{string.Join("\t", _opt.Prefixes)}\tHtml文件根目录为:{_opt?.RootPath}");
 
                 }
@@ -174,7 +180,7 @@ namespace LeeTeke.HttpServerLite
         /// 路由异常捕获工厂
         /// </summary>
         /// <param name="factory"></param>
-        public void RouteExceptionFactory(Action<HttpListenerContext, Exception> factory) => _routeExceptionFactory = factory;
+        public void RouteExceptionFactory(Action<HttpListenerContext, Exception> factory) => RaiseRouteException = factory;
 
         /// <summary>
         /// Router重设
@@ -236,7 +242,7 @@ namespace LeeTeke.HttpServerLite
                 catch (Exception ex)
                 {
                     Logger(ex.Message, ex);
-                    _routeExceptionFactory(listenerContext, ex);
+                    RaiseRouteException(listenerContext, ex);
                 }
             });
 

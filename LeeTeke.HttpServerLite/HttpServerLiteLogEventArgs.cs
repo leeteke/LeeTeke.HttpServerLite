@@ -15,11 +15,11 @@ namespace LeeTeke.HttpServerLite
         /// <summary>
         /// 异常
         /// </summary>
-        public Exception? Exception { get; init; }
+        public Exception? Exception { get;  }
         /// <summary>
         /// 消息
         /// </summary>
-        public string Msg { get; init; }
+        public string Msg { get;  }
 
         /// <summary>
         /// 服务自身的日志输出参数

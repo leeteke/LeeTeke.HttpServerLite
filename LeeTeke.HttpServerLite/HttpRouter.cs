@@ -14,13 +14,14 @@ namespace LeeTeke.HttpServerLite
 { /// <summary>
   /// http路由器
   /// </summary>
-    public class HttpRouter
+    public class HttpRouter : IHttpServierLiteRouter
     {
-        private ConcurrentDictionary<string, HttpRoute> _mainDic;//主路由dir
-        private ConcurrentDictionary<string, HttpRoute> _takeOverDic;//接管路由dir
-        private ConcurrentDictionary<string, Action<HttpListenerContext>> _mapDic;//直接（且优先）
+        private readonly ConcurrentDictionary<string, HttpRoute> _mainDic;//主路由dir
+        private readonly ConcurrentDictionary<string, HttpRoute> _takeOverDic;//接管路由dir
+        private readonly ConcurrentDictionary<string, Action<HttpListenerContext>> _mapDic;//直接（且优先）
+
         /// <summary>
-        /// http路由器
+        /// 路由器
         /// </summary>
         public HttpRouter()
         {
@@ -119,14 +120,14 @@ namespace LeeTeke.HttpServerLite
                             {
                                 foreach (var urlItem in item.RoutePaths)
                                 {
-                                    _ = _mainDic.TryAdd(Path.Join(prefix, urlItem), new HttpRoute(method, controller, _base.BeforeRouteAction));
+                                    _ = _mainDic.TryAdd(prefix + urlItem, new HttpRoute(method, controller, _base.BeforeRouteAction));
                                 }
                             }
                             else
                             {
-                                _ = _mainDic.TryAdd(Path.Join(prefix, item.RoutePath), new HttpRoute(method, controller, _base.BeforeRouteAction));
+                                _ = _mainDic.TryAdd(prefix + item.RoutePath, new HttpRoute(method, controller, _base.BeforeRouteAction));
                                 if (item.TakeOver)
-                                    _ = _takeOverDic.TryAdd(Path.Join(prefix, item.RoutePath), new HttpRoute(method, controller, _base.BeforeRouteAction));
+                                    _ = _takeOverDic.TryAdd(prefix + item.RoutePath, new HttpRoute(method, controller, _base.BeforeRouteAction));
                             }
                         }
                     }
@@ -143,11 +144,11 @@ namespace LeeTeke.HttpServerLite
         /// 路径映射
         /// 优先级高
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="action"></param>
-        public void Map(string path, Action<HttpListenerContext> action)
+        /// <param name="path">路径</param>
+        /// <param name="context"></param>
+        public void Map(string path, Action<HttpListenerContext> context)
         {
-            _ = _mapDic.TryAdd(path, action);
+            _ = _mapDic.TryAdd(path, context);
         }
 
         /// <summary>

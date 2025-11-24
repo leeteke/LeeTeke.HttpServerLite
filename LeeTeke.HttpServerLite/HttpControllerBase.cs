@@ -19,7 +19,8 @@ namespace LeeTeke.HttpServerLite
         /// </summary>
         public string RoutePrefix
         {
-            get => _rootPrefix; init
+            get => _rootPrefix;
+            set
             {
                 _rootPrefix = $"{value.Trim('/')}/";
                 if (_rootPrefix == "//")
@@ -33,6 +34,9 @@ namespace LeeTeke.HttpServerLite
 
         internal HttpListenerBuilder _builder = null!;
 
+        /// <summary>
+        /// 构造器
+        /// </summary>
         protected HttpListenerBuilder Builder => _builder;
 
               
@@ -75,7 +79,7 @@ namespace LeeTeke.HttpServerLite
         /// <param name="ex"></param>
         public void RaiseException(HttpListenerContext context, Exception ex)
         {
-            _builder._routeExceptionFactory(context, ex);
+            _builder.RaiseRouteException(context, ex);
         }
 
     }

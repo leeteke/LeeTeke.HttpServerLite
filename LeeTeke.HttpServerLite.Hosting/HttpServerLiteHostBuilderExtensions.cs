@@ -2,9 +2,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Collections;
+using System.Linq;
 using System.Reflection;
-using System.Text.Json;
 
 namespace LeeTeke.HttpServerLite
 {
@@ -16,8 +17,9 @@ namespace LeeTeke.HttpServerLite
         /// <param name="builder">IHostBuilder</param>
         /// <param name="options">配置</param>
         /// <param name="configureServer">配置</param>
+        /// <param name="router">自定义路由策略</param>
         /// <returns></returns>
-        public static IHostBuilder UseHttpServerLite(this IHostBuilder builder, HttpApplicationOptions options, Action<HostBuilderContext, IServiceProvider, HttpListenerBuilder> configureServer)
+        public static IHostBuilder UseHttpServerLite(this IHostBuilder builder, HttpApplicationOptions options, Action<HostBuilderContext, IServiceProvider, HttpListenerBuilder> configureServer,IHttpServierLiteRouter? router= default)
         {
 
 
@@ -26,7 +28,7 @@ namespace LeeTeke.HttpServerLite
 
                 collection.AddHostedService(services =>
                 {
-                    var httpServer = HttpServerLite.CreateBuilder(options);
+                    var httpServer = HttpServerLite.CreateBuilder(router,options);
                     return new HttpServerListHostedService(
                         () =>
                         {
@@ -50,8 +52,9 @@ namespace LeeTeke.HttpServerLite
         /// </summary>
         /// <param name="builder">IHostBuilder</param>
         /// <param name="configureServer">配置</param>
+        /// <param name="router">自定义路由策略</param>
         /// <returns></returns>
-        public static IHostBuilder UseHttpServerLite(this IHostBuilder builder, Action<HostBuilderContext, IServiceProvider, HttpListenerBuilder> configureServer)
+        public static IHostBuilder UseHttpServerLite(this IHostBuilder builder, Action<HostBuilderContext, IServiceProvider, HttpListenerBuilder> configureServer, IHttpServierLiteRouter? router = default)
         {
 
             builder.ConfigureServices((context, collection) =>
@@ -59,7 +62,7 @@ namespace LeeTeke.HttpServerLite
 
                 collection.AddHostedService(services =>
                 {
-                    var httpServer = HttpServerLite.CreateBuilder(GetOptionsAppSettinJson(context.Configuration) ?? new HttpApplicationOptions());
+                    var httpServer = HttpServerLite.CreateBuilder(router,GetOptionsAppSettinJson(context.Configuration) ?? new HttpApplicationOptions());
                     return new HttpServerListHostedService(
                         () =>
                         {

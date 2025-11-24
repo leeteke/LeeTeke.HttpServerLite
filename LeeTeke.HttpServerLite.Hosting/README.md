@@ -1,36 +1,38 @@
 
 # LeeTeke.HttpServerLite.Hosting
 · LeeTeke.HttpServerLite for Microsoft.Extensions.Hosting
+· 加入LeeTeke.HttpServerLite.AOT支持
 ## Nuget
-[![NUGET](https://img.shields.io/badge/nuget-1.1.4-blue.svg)](https://www.nuget.org/packages/LeeTeke.HttpServerLite.Hosting)
+[![NUGET](https://img.shields.io/badge/nuget-1.1.5-blue.svg)](https://www.nuget.org/packages/LeeTeke.HttpServerLite.Hosting)
 
-    dotnet add package LeeTeke.HttpServerLite.Hosting --version 1.1.4
+    dotnet add package LeeTeke.HttpServerLite.Hosting --version 1.1.5
 
 
 ## 基本使用方法
 ``` csharp
 using LeeTeke.HttpServerLite;
-using LeeTeke.HttpServerLite.Hosting
-
+using LeeTeke.HttpServerLite.Hosting;
+using LeeTeke.HttpServerLite.AOT;
+using Microsoft.Extensions.DependencyInjection;
   
             var _hosting = Host.CreateDefaultBuilder(args)
                 .ConfigureHostConfiguration(configuration =>
                 {
                     configuration.AddJsonFile("appsettings.json", false, true);
                     configuration.AddCommandLine(args);
-
                 })
                 .ConfigureServices((hosting, service) =>
                 {
                     service.AddSingleton<TestRootController>();
                     service.AddSingleton<TestController>();
+                    service.AddSingleton<VueController>();
 
                 })
-                //使用 UseHttpServerLite 后会自动 将 HttpListenerBuilder 注册为 Singleton。 
-                //手动配置
-                //.UseHttpServerLite(new HttpApplicationOptions() { Port=81},HttpServerLiteConfigure)
-                //使用配置文件配置版本
-                //会自动读取 配置文件下的 HttServerLite 配置项，该配置项为 HttpApplicationOptions的序列化，如下所示
+                 //使用 UseHttpServerLite 后会自动 将 HttpListenerBuilder 注册为 Singleton。 
+                 //手动配置
+                 //.UseHttpServerLite(new HttpApplicationOptions() { Port=81},HttpServerLiteConfigure)
+                 //使用配置文件配置版本
+                 //会自动读取 配置文件下的 HttServerLite 配置项，该配置项为 HttpApplicationOptions的序列化，如下所示
                 /*
                      "HttpServerLite": {
                         //监听地址，值类型string[]
@@ -43,11 +45,15 @@ using LeeTeke.HttpServerLite.Hosting
                         "ArgStr": null
                       }
                 */
-                .UseHttpServerLite(HttpServerLiteConfigure)
+                 //.UseHttpServerLite(HttpServerLiteConfigure)
+                 //启用AOT路由
+                .UseHttpServerLite(HttpServerLiteConfigure,HttpServerLiteRuterAOT.Router)
                 .Build();
-
+               
             _hosting.Start();
+
             _hosting.WaitForShutdown();
+
 
 
 
@@ -94,7 +100,7 @@ using LeeTeke.HttpServerLite.Hosting
                 next();
 
             });
-
+             
             //路由失败，无路由触发
             httpBuilder.AfterRouteFailure(context =>
             {
@@ -110,23 +116,31 @@ using LeeTeke.HttpServerLite.Hosting
                 Console.WriteLine($"route exception:{ex.Message}");
                 context.Close(System.Net.HttpStatusCode.ServiceUnavailable);
             });
+           
             //测试异常
             httpBuilder.Map("/ex", context =>
             {
                 throw new Exception("thrwo exception !");
             });
 
-            //使用Controller
-            httpBuilder.ControllerAdd(services.GetRequiredService<TestRootController>());
-            httpBuilder.ControllerAdd(services.GetRequiredService<TestController>());
+            //启用AOT路由
+            httpBuilder.UseRouterAOT(services);
+
+
+            //手动使用ControllerAdd
+            //【启用AOT路由后此方法不可用】
+            //httpBuilder.ControllerAdd(services.GetRequiredService<TestRootController>());
+            //httpBuilder.ControllerAdd(services.GetRequiredService<TestController>());
 
             //或者直接从IOC里面找
-            //httpBuilder.ControllerAddFromIoc(services)
+            //【启用AOT路由后此方法不可用】
+            //httpBuilder.ControllerAddFromIoc(services);
 
             //提供了Vue文件的快速构建路由
             //参数输入基于RootPath位置
             //访问 www.xxx.com/vue/ 会直接运行 单页面模式 vue。
-            httpBuilder.ControllerAdd(new VueHistoryModeRouter("/vue/") { UseCache_Lastmodified = true, UseGZip = true });
+            //【启用AOT路由后此方法不可用，可创建基于VueHistoryModeRouter的类，并注册以及编辑构造函数】
+            //httpBuilder.ControllerAdd(new VueHistoryModeRouter("/vue/") { UseCache_Lastmodified = true, UseGZip = true });
 
 
             //这里不用写Run了，服务会自动启动

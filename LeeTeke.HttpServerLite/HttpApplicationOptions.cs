@@ -24,7 +24,13 @@ namespace LeeTeke.HttpServerLite
         /// <summary>
         /// Root路径
         /// </summary>
-        public string RootPath { get; set; }= AppDomain.CurrentDomain.BaseDirectory + "/wwwroot/";
+        public string RootPath
+        {
+            get; set
+            {
+                field = value.TrimEnd('/') + "/";
+            }
+        } = AppDomain.CurrentDomain.BaseDirectory + "/wwwroot/";
 
         /// <summary>
         /// 其他参数

@@ -8,39 +8,39 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-
+using LeeTeke.HttpServerLite.AOT;
 namespace Demo
 {
     internal class HostingProgram
     {
-
         static void Main(string[] args)
         {
-
+           
             var _hosting = Host.CreateDefaultBuilder(args)
                 .ConfigureHostConfiguration(configuration =>
                 {
                     configuration.AddJsonFile("appsettings.json", false, true);
                     configuration.AddCommandLine(args);
-
                 })
                 .ConfigureServices((hosting, service) =>
                 {
                     service.AddSingleton<TestRootController>();
                     service.AddSingleton<TestController>();
+                    service.AddSingleton<VueController>();
 
                 })
-                //使用 UseHttpServerLite 后会自动 将 HttpListenerBuilder 注册为 Singleton。 
-                //手动配置
-                //.UseHttpServerLite(new HttpApplicationOptions() { Port=81},HttpServerLiteConfigure)
-                //使用配置文件配置版本
-                .UseHttpServerLite(HttpServerLiteConfigure)
+                 //使用 UseHttpServerLite 后会自动 将 HttpListenerBuilder 注册为 Singleton。 
+                 //手动配置
+                 //.UseHttpServerLite(new HttpApplicationOptions() { Port=81},HttpServerLiteConfigure)
+                 //使用配置文件配置版本
+                 //.UseHttpServerLite(HttpServerLiteConfigure)
+                 //启用AOT路由
+                .UseHttpServerLite(HttpServerLiteConfigure,HttpServerLiteRuterAOT.Router)
                 .Build();
-
+               
             _hosting.Start();
 
             _hosting.WaitForShutdown();
-
 
 
         }
@@ -89,7 +89,7 @@ namespace Demo
                 next();
 
             });
-
+             
             //路由失败，无路由触发
             httpBuilder.AfterRouteFailure(context =>
             {
@@ -105,25 +105,31 @@ namespace Demo
                 Console.WriteLine($"route exception:{ex.Message}");
                 context.Close(System.Net.HttpStatusCode.ServiceUnavailable);
             });
+           
             //测试异常
             httpBuilder.Map("/ex", context =>
             {
                 throw new Exception("thrwo exception !");
             });
 
+            //启用AOT路由
+            httpBuilder.UseRouterAOT(services);
 
 
             //手动使用ControllerAdd
-            httpBuilder.ControllerAdd(services.GetRequiredService<TestRootController>());
-            httpBuilder.ControllerAdd(services.GetRequiredService<TestController>());
+            //【启用AOT路由后此方法不可用】
+            //httpBuilder.ControllerAdd(services.GetRequiredService<TestRootController>());
+            //httpBuilder.ControllerAdd(services.GetRequiredService<TestController>());
 
             //或者直接从IOC里面找
+            //【启用AOT路由后此方法不可用】
             //httpBuilder.ControllerAddFromIoc(services);
 
             //提供了Vue文件的快速构建路由
             //参数输入基于RootPath位置
             //访问 www.xxx.com/vue/ 会直接运行 单页面模式 vue。
-            httpBuilder.ControllerAdd(new VueHistoryModeRouter("/vue/") { UseCache_Lastmodified = true, UseGZip = true });
+            //【启用AOT路由后此方法不可用，可创建基于VueHistoryModeRouter的类，并注册以及编辑构造函数】
+            //httpBuilder.ControllerAdd(new VueHistoryModeRouter("/vue/") { UseCache_Lastmodified = true, UseGZip = true });
 
 
             //这里不用写Run了，服务会自动启动

@@ -1,25 +1,39 @@
 ﻿using LeeTeke.HttpServerLite;
 using System.Runtime.CompilerServices;
 using System.Timers;
+using LeeTeke.HttpServerLite.AOT;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Demo
 {
     internal class Program
     {
+
+        
+
         static void Main(string[] args)
         {
 
-           
 
+            _services = ConfigureServices();
 
             //创建http服务
-            var httpBuilder = HttpServerLite.CreateBuilder(new HttpApplicationOptions()
+            //var httpBuilder = HttpServerLite.CreateBuilder(new HttpApplicationOptions()
+            //{
+            //    Port = 1443,//默认80端口
+            //    // Prefixes = ["https://127.0.0.1:443/"],与Port属性冲突，如果此选项有数值则port选项不生效,单独使用port只会监听http协议
+            //    // RootPath = "./wwwroot/"
+            //    //,ArgStr="" 自定义文本参数
+            //});
+
+            //创建http服务，并支持AOT
+            var httpBuilder = HttpServerLite.CreateBuilder(HttpServerLiteRuterAOT.Router, new HttpApplicationOptions()
             {
                  Port = 1443,//默认80端口
                 // Prefixes = ["https://127.0.0.1:443/"],与Port属性冲突，如果此选项有数值则port选项不生效,单独使用port只会监听http协议
                 // RootPath = "./wwwroot/"
                 //,ArgStr="" 自定义文本参数
-            });
+            } );
 
             //日志输出
             httpBuilder.HttpServerLiteLogTrigger += (sender,  args)=>
@@ -84,14 +98,24 @@ namespace Demo
                 throw new Exception("thrwo exception !");
             });
 
-            //使用Controller
-            httpBuilder.ControllerAdd(new TestRootController());
-            httpBuilder.ControllerAdd(new TestController());
+
+            //启用AOT路由
+            httpBuilder.UseRouterAOT(Services);
+            
+            //手动使用ControllerAdd
+            //【启用AOT路由后此方法不可用】
+            //httpBuilder.ControllerAdd(new TestRootController());
+            //httpBuilder.ControllerAdd(new TestController>());
+
+            //或者直接从IOC里面找
+            //【启用AOT路由后此方法不可用】
+            //httpBuilder.ControllerAddFromIoc(Services);
 
             //提供了Vue文件的快速构建路由
             //参数输入基于RootPath位置
             //访问 www.xxx.com/vue/ 会直接运行 单页面模式 vue。
-            httpBuilder.ControllerAdd(new VueHistoryModeRouter("/vue/") { UseCache_Lastmodified = true, UseGZip = true });
+            //【启用AOT路由后此方法不可用，可创建基于VueHistoryModeRouter的类，并注册以及编辑构造函数】
+            //httpBuilder.ControllerAdd(new VueHistoryModeRouter("/vue/") { UseCache_Lastmodified = true, UseGZip = true });
 
             //开始服务
             httpBuilder.Run();
@@ -99,6 +123,31 @@ namespace Demo
             Console.ReadLine();
         }
 
-     
+
+        #region 若想使用AOT，则必须使用Ioc
+
+
+        private static IServiceProvider _services = null!;
+        /// <summary>
+        /// 服务
+        /// </summary>
+        public static IServiceProvider Services { get => _services; }
+
+
+        /// <summary>
+        /// 配置IOC
+        /// </summary>
+        private static IServiceProvider ConfigureServices()
+        {
+            var services = new ServiceCollection();
+            services.AddSingleton<TestRootController>();
+            services.AddSingleton<TestController>();
+            services.AddSingleton<VueHistoryModeRouter>();
+            return services.BuildServiceProvider();
+        }
+        #endregion
+
+
+
     }
 }

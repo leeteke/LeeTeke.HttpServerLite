@@ -2,22 +2,21 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <StartupObject>Demo.HostingProgram</StartupObject>
+    <PublishAot>True</PublishAot>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\LeeTeke.HttpServerLite.Hosting\LeeTeke.HttpServerLite.Hosting.csproj" />
-    <ProjectReference Include="..\LeeTeke.HttpServerLite\LeeTeke.HttpServerLite.csproj" />
-  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="LeeTeke.HttpServerLite" Version="1.2.0-preview" />
+    <PackageReference Include="LeeTeke.HttpServerLite.AOT" Version="1.0.0-preview" />
+    <PackageReference Include="LeeTeke.HttpServerLite.Hosting" Version="1.1.5-preview" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.7" />
   </ItemGroup>
 

@@ -49,7 +49,7 @@ namespace LeeTeke.HttpServerLite
             {
                 if (string.IsNullOrWhiteSpace(jsonString))
                     return default;
-                return JsonSerializer.Deserialize<T>(jsonString, options ?? JSOpentions);
+                return JsonSerializer.Deserialize<T>(jsonString!, options ?? JSOpentions);
             }
             catch
             {

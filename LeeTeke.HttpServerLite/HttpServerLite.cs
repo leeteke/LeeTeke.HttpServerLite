@@ -2,13 +2,11 @@
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Text;
-using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Nodes;
 using System.Collections.Specialized;
 using System.Web;
 using System.Runtime.CompilerServices;
-using System.Reflection.PortableExecutable;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
 
@@ -82,8 +80,18 @@ namespace LeeTeke.HttpServerLite
         /// <returns></returns>
         public static HttpListenerBuilder CreateBuilder(HttpApplicationOptions opt)
         {
+            return CreateBuilder(null, opt);
+        }
 
-            return new HttpListenerBuilder().Build(opt);
+        /// <summary>
+        /// 构造器
+        /// </summary>
+        /// <param name="router">自定义router</param>
+        /// <param name="opt">完整参数</param>
+        /// <returns></returns>
+        public static HttpListenerBuilder CreateBuilder(IHttpServierLiteRouter? router, HttpApplicationOptions opt)
+        {
+            return new HttpListenerBuilder(router ?? new HttpRouter()).Build(opt);
         }
 
         /// <summary>
@@ -93,7 +101,7 @@ namespace LeeTeke.HttpServerLite
         /// <returns></returns>
         public static HttpApplicationOptions GetBuilderOptions(HttpListenerBuilder builder)
         {
-            return builder._opt;
+            return builder.Options;
         }
 
 
@@ -104,8 +112,11 @@ namespace LeeTeke.HttpServerLite
         /// <returns></returns>
         public static HttpListener GetBuilderListener(HttpListenerBuilder builder)
         {
-            return builder._listener;
+            return builder.Listener;
         }
+
+
+
 
 
 
@@ -807,7 +818,7 @@ namespace LeeTeke.HttpServerLite
         /// <returns></returns>
         public static string LocalPathConverter(this Uri url, string baseLocalPath, int ignorePathSegment = 1)
         {
-            return Path.Join(baseLocalPath, string.Join(null, url.Segments.Skip(ignorePathSegment)));
+            return baseLocalPath+ string.Join(null, url.Segments.Skip(ignorePathSegment));
         }
 
         /// <summary>
@@ -821,7 +832,7 @@ namespace LeeTeke.HttpServerLite
         public static string LocalPathConverter(this Uri url, string baseLocalPath, string suffix, int ignorePathSegment = 1)
         {
             var newUrl = url.LocalPathConverter(baseLocalPath, ignorePathSegment);
-            return newUrl.EndsWith('/') ? newUrl + suffix : newUrl;
+            return newUrl.EndsWith("/") ? newUrl + suffix : newUrl;
         }
 
         /// <summary>
@@ -892,7 +903,7 @@ namespace LeeTeke.HttpServerLite
                 }
                 var two = reStart.Skip(startIndex + startEnd.Length);
                 var endLength = request.ContentEncoding.GetBytes($"\r\n\r\n{px}--\r\n").Length;
-                var result = two.SkipLast(endLength).ToArray();
+                var result = two.Take(two.Count() - endLength).ToArray();
 
                 return (result, filename);
             }
@@ -973,7 +984,7 @@ namespace LeeTeke.HttpServerLite
                 if (!range.StartsWith("bytes="))
                     return (null, null);
 
-                var timeRange = range[6..].Split('-');
+                var timeRange = range.Skip(6).ToString().Split('-');
                 if (timeRange.Length != 2)
                     return (null, null);
 
@@ -1102,7 +1113,7 @@ namespace LeeTeke.HttpServerLite
                 return JsonSerializer.Deserialize<T>(ReadString(request, encoding), options);
 
             }
-            catch 
+            catch
             {
 
                 return default;
@@ -1127,7 +1138,7 @@ namespace LeeTeke.HttpServerLite
                 using var mreg = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\services\HTTP\Parameters", RegistryKeyPermissionCheck.ReadWriteSubTree);
                 mreg.SetValue("EnableHttp3", 1);
                 mreg.SetValue("EnableAltSvc", 1);
-            };
+            }
         }
         /// <summary>
         /// 关闭Http.sys的将服务器标头追加到响应。
@@ -1139,7 +1150,7 @@ namespace LeeTeke.HttpServerLite
             {
                 using var mreg = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\services\HTTP\Parameters", RegistryKeyPermissionCheck.ReadWriteSubTree);
                 mreg.SetValue("DisableServerHeader", 2);
-            };
+            }
         }
 
         /// <summary>

@@ -13,16 +13,15 @@ namespace Demo
     //必须基于 HttpControllerBase
     public class TestController : HttpControllerBase
     {
-
-
         public TestController()
         {
             //这里填写路由地址;
             //默认地址为‘/’
             //此地址的含义为 www.xxx.com/testcontroll/
             base.RoutePrefix = "/testcontroll/";
+            
         }
-
+        
 
         //请注意 此方法 谨慎使用 async void 形式 ，若必须使用，则请注意在内部使用try catch。或者使用 override async Task BeforeRouteAsync;
         public override void BeforeRoute(HttpListenerContext listenerContext, Action<object[]?> next)
@@ -36,7 +35,7 @@ namespace Demo
                     break;
                 case "/testcontroll/before":
                     //传参，传递的参数不要包含 HttpListenerContext，并且请按照相应路由方法的参数顺序进行传参（除去HttpListenerContext）。
-                    next([DateTime.Now.ToString()]);
+                    next([null]);
                     break;
                 default:
                     //默认下一步，传参为空Array即可
@@ -56,21 +55,21 @@ namespace Demo
         //3、可以无参，但是http路由会在进入方法前结束http会话，并返回 httpstatuscode=200;
         //4、若有参数则首位参数必须是 HttpListenerContext listenerContext
         // www.xxx.com/testcontroll/ 路由到这里
-        [Route("/")]
+        [Route("////")]
         public void Root(HttpListenerContext context)
         {
             context.SendString("这里是 TestController");
         }
 
         // www.xxx.com/testcontroll/a 路由到这里
-        [LeeTeke.HttpServerLite.Route("a")]
+        [LeeTeke.HttpServerLite.Route("a","a1","a2")]
         public void A(HttpListenerContext context)
         {
             context.SendString(context.Request.Url!.LocalPath);
         }
 
         // www.xxx.com/testcontroll/b 与 www.xxx.com/testcontroll/c路由到这里
-        [LeeTeke.HttpServerLite.Route("b")]
+        [LeeTeke.HttpServerLite.Route("b",TakeOver =true)]
         [LeeTeke.HttpServerLite.Route("c")]
         public void B(HttpListenerContext context)
         {
@@ -94,7 +93,7 @@ namespace Demo
         //多参数属性，如果在 BeforeRoute 方法里传递的参数个数多余本方法则会截取，若小于本方法，则不会进入此方法，并且http会做 501（NotImplemented）回应。
         // www.xxx.com/testcontroll/before路由到这里
         [LeeTeke.HttpServerLite.Route("before")]
-        public void Before(HttpListenerContext context, string obj)
+        public void Before(HttpListenerContext context, Nullable<int> obj)
         {
             context.SendString(context.Request.Url!.LocalPath + "_" + obj);
         }

@@ -72,7 +72,7 @@ namespace LeeTeke.HttpServerLite
             }
             else
             {
-                indexPath = Path.Join(HttpServerLite.GetBuilderOptions(Builder).RootPath, RoutePrefix,"index.html");
+                indexPath = HttpServerLite.GetBuilderOptions(Builder).RootPath+ RoutePrefix+"index.html";
                 if (!File.Exists(indexPath))
                 {
                     listenerContext.Close();

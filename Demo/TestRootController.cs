@@ -45,8 +45,6 @@ namespace Demo
         {
 
 
-
-
             //发送Bytes,httpcode=200
             listenerContext.SendBytes(bytes: [], contentType: "text/plain", encoding: "utf-8");
 
