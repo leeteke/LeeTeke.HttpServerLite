@@ -40,7 +40,7 @@ using Microsoft.Extensions.DependencyInjection;
                  //使用配置文件配置版本
                  //.UseHttpServerLite(HttpServerLiteConfigure)
                  //启用AOT路由
-                .UseHttpServerLite(HttpServerLiteConfigure,HttpServerLiteRuterAOT.Router)
+                .UseHttpServerLite(HttpServerLiteConfigure,HttpServerLiteAOT.Router)
                 .Build();
                
             _hosting.Start();
@@ -179,7 +179,7 @@ using Microsoft.Extensions.DependencyInjection;
                         "ArgStr": null
                       }
                 */
-                .UseHttpServerLite(HttpServerLiteConfigure,HttpServerLiteRuterAOT.Router)
+                .UseHttpServerLite(HttpServerLiteConfigure,HttpServerLiteAOT.Router)
                 .Build();
 
             _hosting.Start();

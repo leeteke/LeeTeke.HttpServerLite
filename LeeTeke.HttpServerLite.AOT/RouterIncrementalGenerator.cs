@@ -32,7 +32,7 @@ namespace LeeTeke.HttpServerLite.AOT
 
                     namespace LeeTeke.HttpServerLite.AOT
                     {     
-                        public static class HttpServerLiteRuterAOT
+                        public static class HttpServerLiteAOT
                         {
                         
                             public static HttpRouterAOT Router { get; } = new HttpRouterAOT();

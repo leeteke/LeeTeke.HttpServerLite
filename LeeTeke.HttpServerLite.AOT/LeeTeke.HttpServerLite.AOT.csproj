@@ -6,7 +6,7 @@
 	  <ImplicitUsings>disable</ImplicitUsings>
 	  <LangVersion>latest</LangVersion>
 	  <PackageTags>http;router;nativeaot;httpserverlite;leeteke;aot;</PackageTags>
-	  <Version>1.0.0</Version>
+	  <Version>1.0.1</Version>
 	  <IncludeBuildOutput>false</IncludeBuildOutput>
 	  <IsRoslynComponent>true</IsRoslynComponent>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
