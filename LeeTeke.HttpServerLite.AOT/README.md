@@ -7,9 +7,9 @@ LeeTeke.HttpServerLite -- version >=1.2.0
 Microsoft.Extensions.DependencyInjection -- version 10.0.0
 
 ## Nuget
-[![NUGET](https://img.shields.io/badge/nuget-1.0.0-blue.svg)](https://www.nuget.org/packages/LeeTeke.HttpServerLite.AOT)
+[![NUGET](https://img.shields.io/badge/nuget-1.0.1-blue.svg)](https://www.nuget.org/packages/LeeTeke.HttpServerLite.AOT)
 
-    dotnet add package LeeTeke.HttpServerLite.AOT --version 1.0.0
+    dotnet add package LeeTeke.HttpServerLite.AOT
 
 ## 基本使用方法
 ``` csharp

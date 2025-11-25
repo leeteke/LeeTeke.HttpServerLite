@@ -3,9 +3,9 @@
 · LeeTeke.HttpServerLite for Microsoft.Extensions.Hosting
 · 加入LeeTeke.HttpServerLite.AOT支持
 ## Nuget
-[![NUGET](https://img.shields.io/badge/nuget-1.1.5-blue.svg)](https://www.nuget.org/packages/LeeTeke.HttpServerLite.Hosting)
+[![NUGET](https://img.shields.io/badge/nuget-1.1.6-blue.svg)](https://www.nuget.org/packages/LeeTeke.HttpServerLite.Hosting)
 
-    dotnet add package LeeTeke.HttpServerLite.Hosting --version 1.1.5
+    dotnet add package LeeTeke.HttpServerLite.Hosting 
 
 
 ## 基本使用方法
@@ -47,7 +47,8 @@ using Microsoft.Extensions.DependencyInjection;
                 */
                  //.UseHttpServerLite(HttpServerLiteConfigure)
                  //启用AOT路由
-                .UseHttpServerLite(HttpServerLiteConfigure,HttpServerLiteRuterAOT.Router)
+                 //最好自己配置HttpApplicationOptions,因为GetSection好像不支持AOT
+                .UseHttpServerLite((configuration)=>new HttpApplicationOptions(){Port=81},HttpServerLiteConfigure,HttpServerLiteAOT.Router)
                 .Build();
                
             _hosting.Start();

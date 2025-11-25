@@ -27,7 +27,7 @@ namespace Demo
             //});
 
             //创建http服务，并支持AOT
-            var httpBuilder = HttpServerLite.CreateBuilder(HttpServerLiteRuterAOT.Router, new HttpApplicationOptions()
+            var httpBuilder = HttpServerLite.CreateBuilder(HttpServerLiteAOT.Router, new HttpApplicationOptions()
             {
                  Port = 1443,//默认80端口
                 // Prefixes = ["https://127.0.0.1:443/"],与Port属性冲突，如果此选项有数值则port选项不生效,单独使用port只会监听http协议
