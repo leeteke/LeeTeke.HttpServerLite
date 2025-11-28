@@ -7,7 +7,7 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Leeteke</Authors>
-    <Version>1.1.6</Version>
+    <Version>1.1.7</Version>
     <PackageProjectUrl>https://github.com/leeteke/LeeTeke.HttpServerLite</PackageProjectUrl>
     <RepositoryUrl>https://github.com/leeteke/LeeTeke.HttpServerLite</RepositoryUrl>
     <PackageTags>httpserverlite,http;http server; http router; vue;hosting;aot;native aot;</PackageTags>

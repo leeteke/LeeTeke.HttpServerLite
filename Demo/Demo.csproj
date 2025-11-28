@@ -16,7 +16,7 @@
   <ItemGroup>
     <PackageReference Include="LeeTeke.HttpServerLite" Version="1.2.0" />
     <PackageReference Include="LeeTeke.HttpServerLite.AOT" Version="1.0.1" />
-    <PackageReference Include="LeeTeke.HttpServerLite.Hosting" Version="1.1.6" />
+    <PackageReference Include="LeeTeke.HttpServerLite.Hosting" Version="1.1.7" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
   </ItemGroup>
 

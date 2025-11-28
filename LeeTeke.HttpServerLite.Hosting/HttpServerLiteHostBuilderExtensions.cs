@@ -149,9 +149,14 @@ namespace LeeTeke.HttpServerLite
         {
             try
             {
-             
+                HttpApplicationOptions options = new HttpApplicationOptions();
 
-                var options = configuration.GetSection("HttpServerLite").Get<HttpApplicationOptions>();
+                options.Port = int.Parse(configuration["HttpServerLite:Port"] ?? "80");
+                options.RootPath= configuration["HttpServerLite:RootPath"] ?? "./wwwroot/";
+                options.ArgStr= configuration["HttpServerLite:ArgStr"];
+                var pa= configuration.AsEnumerable().Where(p => p.Key.StartsWith("HttpServerLite:Prefixes:")).Select(p => p.Value!);
+                if (pa.Any()) 
+                    options.Prefixes= [..pa];
                 return options;
             }
             catch

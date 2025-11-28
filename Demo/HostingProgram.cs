@@ -29,13 +29,14 @@ namespace Demo
                     service.AddSingleton<VueController>();
 
                 })
-                 //使用 UseHttpServerLite 后会自动 将 HttpListenerBuilder 注册为 Singleton。 
-                 //手动配置
-                 //.UseHttpServerLite(new HttpApplicationOptions() { Port=81},HttpServerLiteConfigure)
-                 //使用配置文件配置版本
-                 //.UseHttpServerLite(HttpServerLiteConfigure)
-                 //启用AOT路由
-                .UseHttpServerLite(configuration=> new HttpApplicationOptions() { Port = int.Parse(configuration["HttpServerLite:Port"] ??"8080") }, HttpServerLiteConfigure, HttpServerLiteAOT.Router)
+                //使用 UseHttpServerLite 后会自动 将 HttpListenerBuilder 注册为 Singleton。 
+                //手动配置
+                //.UseHttpServerLite(new HttpApplicationOptions() { Port=81},HttpServerLiteConfigure)
+                //使用配置文件配置版本
+                //.UseHttpServerLite(HttpServerLiteConfigure)
+                //启用AOT路由
+                //已优化配置项读取，支持AOT
+                .UseHttpServerLite(HttpServerLiteConfigure, HttpServerLiteAOT.Router)
                 .Build();
                
             _hosting.Start();
